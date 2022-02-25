@@ -21,20 +21,28 @@
 Python 3.7+
 
 **Steps to configure the Environment**
-1) Create a new VM or use an existing one. 
-2) While creating VM, allow service account access to Google APIs.
-3) Assign the service account IAM permission through IAM to be able to publish events to Pub/sub.
 
-4. Install pip3 for python3.
+*Creating and configuring permissions for Virtual Machine* 
+1) Create a new VM.  
+   Follow the instructions here to create and start a new VM: https://cloud.google.com/compute/docs/instances/create-start-instance
+2) While creating a VM, Under the `Identity and API access` section, chose the default `Compute Enginere default service account` and under `access scopes` select the option `Allow full access to Google cloud APIs`.
+3) After creating the VM, go to the IAM & adming page, edit the VM's service account and Assign the service account the IAM permission `Pub/Sub Publisher` allowing to publish events to Pub/sub.
+
+*Configuring the VM to install requirements to Use Python*
+After the VM has been installed, SSH into the VM to install Pip, Python, 
+
+1. Install and use Python virtual environment in the VM.
+   Detailed steps can be found here: https://gist.github.com/Geoyi/d9fab4f609e9f75941946be45000632b
+
+2. Install pip3 for python3.
    
    1) `sudo apt-get update`
    2) `sudo apt-get -y install python3-pip`
    3) `pip3 --version`
   
    Article with more details: https://www.educative.io/edpresso/installing-pip3-in-ubuntu
-   
 
-5. Install Postgres client  
+3. Install Postgres client  
 
     1. `sudo apt-get update`
     2. `sudo apt-get install postgresql-client`
@@ -42,23 +50,33 @@ Python 3.7+
        Postgres link with more details: https://wiki.postgresql.org/wiki/Apt
        
        
-6. Install psycopg2:  
+4. Install psycopg2:  
         `pip3 install psycopg2`  
-        Code from here:https://www.postgresqltutorial.com/postgresql-python/connect/ 
+        `Code` from here:https://www.postgresqltutorial.com/postgresql-python/connect/ 
    
-7. Install Pub/sub pip3 install --upgrade google-cloud-pubsub 
-8. Give the Service account permission through IAM to be able to publish events to Pub/sub.
+5. Install Pub/sub 
+   ```pip3 install --upgrade google-cloud-pubsub``` 
+   
+6. Give the Service account permission through IAM to be able to publish events to Pub/sub. Role required is `Pub/Sub Publisher`
 
 
 **CloudSql-Postgres Instructions**
 1. Postgres super user is required with the role replication. 
    
     https://cloud.google.com/sql/docs/postgres/replication/configure-logical-replication#examples 
-2. Turn on the database flag `cloudsql.logical_decoding`
-3. Turn on the flag `cloudsql.enable_pglogical`
-4. Mode details around replication of CDC can be found here: 
-   https://cloud.google.com/sql/docs/postgres/replication/configure-logical-replication#receiving-decoded-wal-changes-for-change-data-capture
-5. https://cloud.google.com/sql/docs/postgres/replication/configure-logical-replication#setting-up-logical-replication-with-pglogical
+
+2. Turn on the following database flags 
+   1) `cloudsql.logical_decoding`
+   2)  `cloudsql.enable_pglogical`.  
+       Please follow the instructions here to see how to turn on database flags:
+       https://cloud.google.com/sql/docs/postgres/flags#set_a_database_flag
+
+Mode details around replication of CDC can be found here: 
+       
+https://cloud.google.com/sql/docs/postgres/replication/configure-logical-replication#receiving-decoded-wal-changes-for-change-data-capture
+
+https://cloud.google.com/sql/docs/postgres/replication/configure-logical-replication#setting-up-logical-replication-with-pglogical
+
 
 
 #Database.ini file
